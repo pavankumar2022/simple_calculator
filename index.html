@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Simple Calculator....</title>
+    <style>
+        #container {
+            width: 100%;
+            height: 100vh;
+            background-color:crimson;
+        }
+
+        #calculator {
+            width: 250px;
+            height: 400px;
+            background-color: white;
+            margin: 0 auto;
+            top: 70px;
+            position: relative;
+            border: 5px solid navy;
+            border-radius: 5px;
+        }
+
+        #result {
+            height: 60px;
+            text-align: right;
+            border-bottom: 2px solid black;
+          
+        }
+
+        #history {
+            height: 20px;
+            margin-right: 10px;
+            font-size: 15;
+         
+        }
+
+        #output {
+            height: 40px;
+            font-size: 25px;
+            position: relative;
+            margin-right: 10px;
+            bottom: 20px;
+            font-weight: bold
+        }
+
+        #keyword {
+            height: 340px;
+            margin-top: 15px;
+        }
+
+        .number,
+        .operator,
+        .empty {
+            border-radius: 50%;
+            border-width: 0;
+            width: 40px;
+            height: 40px;
+            padding: 15px;
+            margin: 9px;
+            font-size: 13px;
+            /*  outline: none; */
+            font-weight: bold;
+        }
+
+        .number,
+        .empty {
+            background-color: white;
+        }
+
+        .number,
+        .operator {
+            cursor: pointer;
+        }
+
+        .number:active,
+        .operator:active {
+            font-size: 15px;
+        }
+
+        .number:focus,
+        .operator:focus,
+        .empty:focus {
+            outline: none;
+        }
+
+        button:nth-child(4) {
+            background-color: aqua;
+        }
+
+        button:nth-child(8) {
+            background-color: orange;
+        }
+
+        button:nth-child(12) {
+            background-color: chocolate;
+        }
+
+        button:nth-child(16) {
+            background-color: cornflowerblue;
+        }
+
+        button:nth-child(20) {
+            background-color: darkslateblue;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="container">
+        <div id="calculator">
+            <div id="result">
+                <div id="history">
+                    <p id="history-value"></p>
+                </div>
+                <div id="output">
+                    <p id="output-value"></p>
+                </div>
+            </div>
+
+            <div id="keyword">
+                <button class="operator" id="clear">C</button>
+                <button class="operator" id="backspace">CE</button>
+                <button class="operator" id="%">%</button>
+                <button class="operator" id="/">&#247</button>
+                <button class="number" id="7">7</button>
+                <button class="number" id="8">8</button>
+                <button class="number" id="9">9</bu94 tton>
+                    <button class="operator" id="*">&times</button>
+                    <button class="number" id="4">4</button>
+                    <button class="number" id="5">5</button>
+                    <button class="number" id="6">6</button>
+                    <button class="operator" id="-">-</button>
+                    <button class="number" id="1">1</button>
+                    <button class="number" id="2">2</button>
+                    <button class="number" id="3">3</button>
+                    <button class="operator" id="+">+</button>
+                    <button class="number" id="empty"></button>
+                    <button class="number" id="0">0</button>
+                    <button class="number" id="empty"></button>
+                    <button class="operator" id="=">=</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    function getHistory() {
+        return document.getElementById('history-value').innerText;
+    }
+    function printHistory(num) {
+        return document.getElementById('history-value').innerText = num;
+    }
+    function getOutput() {
+        return document.getElementById('output-value').innerText;
+    }
+
+    function printOutput(num) {
+        if (num == " ") {
+            document.getElementById('output-value').innerText = num;
+        }
+        else {
+            document.getElementById('output-value').innerText = getFormattedNumber(num);
+        }
+        function getFormattedNumber(num) {
+            if(num==" "){
+                return " ";
+            }
+            var n = Number(num);
+            var value = n.toLocaleString('en');
+            return value;
+        }
+    }
+    function reverseNumberFormat(num) {
+        return Number(num.replace(/,/g, ''));
+    }
+
+    var number = document.getElementsByClassName('number');
+    for (var i = 0; i < number.length; i++) {
+        number[i].addEventListener('click', function () {
+            var output = reverseNumberFormat(getOutput());
+            if (output != NaN) {
+                output += this.id;
+                printOutput(output);
+             }
+          });
+    }
+
+    var operator = document.getElementsByClassName('operator');
+    for(var i=0;i<operator.length;i++){
+        operator[i].addEventListener('click',function(){
+            if(this.id=='clear'){
+                printHistory("");
+                printOutput("");
+            }
+           else if(this.id=="backspace"){
+                var output = reverseNumberFormat(getOutput()).toString();
+                if(output){
+                    output=output.substr(0,output.length-1); 
+                    printOutput(output);
+                }
+            }
+            else {
+                var output = getOutput();
+                var history = getHistory();
+                if(output!=""){
+               output = reverseNumberFormat(output);
+               history = history+output;
+               if(this.id=="="){
+                   var result = eval(history);
+                   printOutput(result);
+                   printHistory("");
+               }
+               else{
+                   history=history+this.id;
+                   printHistory(history);
+                   printOutput("");
+               }
+                }
+             }
+      });
+    }
+</script>
+
+</html>
